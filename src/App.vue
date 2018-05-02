@@ -31,8 +31,8 @@
     <v-content>
       <router-view/>
     </v-content>
-    <v-footer fixed dark app color="blue darken-3">
-      <span>Ness Map &copy; 2017</span>
+    <v-footer fixed dark app color="blue darken-3" class="pa-3">
+      <div>Ness Map &copy; 2017</div>
     </v-footer>
   </v-app>
 </template>

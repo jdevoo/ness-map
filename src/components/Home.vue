@@ -1,7 +1,19 @@
 <template>
   <v-container fluid>
-    <v-layout row>
-      <v-flex d-flex xs4 mr-3>
+    <v-layout column>
+      <v-flex xs12>
+        <v-layout row style="justify-content: center">
+          <v-flex xs2 v-for="(item, i) in headquarters" :key="i">
+            <v-checkbox :label=item.title v-model=item.visible @change="addMarkersToMap()"> </v-checkbox>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+      <v-flex xs12>
+        <v-card>
+          <div id="mapContainer" style="width: 100%; height: 480px; background: grey"></div>
+        </v-card>
+      </v-flex>
+      <v-flex xs12>
         <v-card class="list-layout">
           <v-subheader>Ness Headquarters</v-subheader>
           <v-expansion-panel>
@@ -9,7 +21,7 @@
               <div slot="header">{{item.title}} ({{item.items.length}})</div>
               <v-list two-line>
                 <template v-for="(headquarter, index) in item.items">
-                  <v-list-tile avatar @click="">
+                  <v-list-tile avatar @click="zoomToLocation(headquarter)">
                     <v-list-tile-avatar>
                       <img :src="headquarter.image" />
                     </v-list-tile-avatar>
@@ -25,21 +37,31 @@
           </v-expansion-panel>
         </v-card>
       </v-flex>
-      <v-flex xs8>
-        <v-card>
-          <div id="mapContainer" style="width: 100%; height: 480px; background: grey"></div>
-        </v-card>
-      </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .list-layout {
-      max-height: 480px;
-      overflow: auto;
-    }
+<style>
+  /* .list-layout {
+    max-height: 480px;
+    overflow: auto;
+  } */
+  .info-bubble {
+    opacity: 0.75;
+    padding: 0 5px;
+  }
+
+  .info-bubble .info-bubble-title {
+    font-size: 15px;
+    margin-left: 2px;
+  }
+
+  .info-bubble .info-bubble-label {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-left: 2px;
+  }
 </style>
 
 <script>
@@ -48,192 +70,102 @@ export default {
   data () {
     return {
       bubble: null,
-      headquarters: [
-        {
-          title: 'North America',
-          items: [
-            {
-              location: 'Teaneck, NJ (USA)',
-              name: 'Corporate Headquarters',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/teaneck-663x663.jpg',
-              address: '300 Frank W. Burr Boulevard, 7th Floor, Teaneck, NJ 07666',
-              lat: 40.873016,
-              lng:-74.005091
-            }, {
-              location: 'San Jose, CA (USA)',
-              name: 'Office',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/sanjose.jpg',
-              address: '2001 Gateway Place, Suite 480W San Jose, CA 95110',
-              lat: 37.369834,
-              lng: -121.922722
-            }, {
-              location: 'Pittsburgh, PA (USA)',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/pittsburgh2.jpg',
-              address: '1000 Town Center Way, Suite 210 Canonsburg, PA 15317',
-              lat: 40.274433,
-              lng:  -80.162593
-            }, {
-              location: 'Ontario, Canada',
-              name: 'Ness Canada, Inc.',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/ontario.jpg',
-              address: '2 Robert Speck Parkway, Suite 750, Mississauga, Ontario, Canada L4Z 1H8',
-              lat: 43.596528,
-              lng: -79.636561
-            }
-          ]
-        },
-        {
-          title:'Europe',
-          items: [
-            {
-              location: 'Muenchen, Germany',
-              name: 'NESS Deutschland GmbH',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/germany.jpg',
-              address: 'Sonnenstr. 23, 80331, Muenchen, Germany',
-              lat: 48.136017,
-              lng: 11.566671
-            },
-            {
-              location: 'Iasi, Romania',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/laci.jpg',
-              address: 'United Business Center 2, Strada Palas 5B, Palas, Iași, Romania',
-              lat: 47.154895,
-              lng: 27.587880
-            },
-            {
-              location: 'Timisoara, Romania',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/04/timisoara.jpg',
-              address: 'United Business Center 2 Timisoara, 6th floor, Str. Aristide Demetriade 1, 300088 Timisoara, Romania',
-              lat: 45.767073,
-              lng: 21.229094
-            },
-            {
-              location: 'Košice, Slovakia',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/kosice2.jpg',
-              address: 'NESS KDC, Moldavská cesta 10/B, 040 11 Košice',
-              lat: 48.707879,
-              lng: 21.246389
-            },
-            {
-              location: 'London, United Kingdom',
-              name: 'Innovation and Design Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/london2.jpg',
-              address: '198 High Holborn, London, WC1V 7BD, United Kingdom',
-              lat: 51.517120,
-              lng: -0.122410
-            }
-          ]
-        },
-        {
-          title: 'India',
-          items: [
-            {
-              location: 'Bangalore, India',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/bangalore2.jpg',
-              address: 'No. 33, 6th Block, 17th H Main Road, Koramangala, Bangalore, Karnataka, 560095',
-              lat: 12.937769,
-              lng: 77.621606
-            },
-            {
-              location: 'Mumbai SEZ, India',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/mumbaisez2.jpg',
-              address: 'Unit No.1/2, Building 5 & 6, Serene Properties, SEZ, Thane Belapur Road, Airoli, Navi Mumbai 400 708',
-              lat: 19.163153,
-              lng: 73.003589
-            },
-            {
-              location: 'Hyderabad, India',
-              name: 'Innovation and Design Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/hyderabad2.jpg',
-              address: '1st & 2nd Floor, 2A Maximus Building, K.Raheja IT Park, Mind space, Madhapur, Hyderabad – 500081',
-              lat: 17.414590,
-              lng: 78.438267
-            }
-          ]
-        },
-        {
-          title: 'Middle East',
-          items: [
-            {
-              location: 'Tel Aviv, Israel',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/telaviv2.jpg',
-              address: 'Atidim Industrial Park Bld. 10, Ramat Hachayal, Tel Aviv',
-              lat: 32.085306,
-              lng: 34.781778
-            }
-          ]
-        },
-        {
-          title: 'East Asia',
-          items: [
-            {
-              location: 'Singapore',
-              name: 'Technology Innovation Center',
-              image: 'https://www.ness.com/wp-content/uploads/2016/01/singapore.jpg',
-              address: 'Ness Global Services Pte Ltd., #23, 2 Changi Business Park Avenue 1, (Level 2 Park Avenue Hotel) Singapore 486015',
-              lat: 1.335867,
-              lng: 103.963100
-            }
-          ]
-        }
-      ]
+      platform: null,
+      maptypes: null,
+      map: null,
+      ui: null,
+      markersGroup: null,
+      svgMarker: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="32px" height="32px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"> <g> <path d="M256,0C167.641,0,96,71.625,96,160c0,24.75,5.625,48.219,15.672,69.125C112.234,230.313,256,512,256,512l142.594-279.375   C409.719,210.844,416,186.156,416,160C416,71.625,344.375,0,256,0z M256,256c-53.016,0-96-43-96-96s42.984-96,96-96   c53,0,96,43,96,96S309,256,256,256z" fill="#D80027"/> </g> </svg>'
+    }
+  },
+  computed: {
+    headquarters () {
+      return this.$store.getters.headquarters
     }
   },
   mounted: function () {
       // Initialize the platform object:
-      var platform = new H.service.Platform({
+      this.platform = new H.service.Platform({
         'app_id': 'tOPDP4GqwPojCCApkMyA',
         'app_code': 'B31er-cbmC_bBOoupZ_O2g',
         'useCIT': true,
         'useHTTPS': true
       })
 
+      // Configure panorama with platform credentials:
+      this.platform.configure(H.map.render.panorama.RenderEngine)
+
       // Obtain the default map types from the platform object
-      var maptypes = platform.createDefaultLayers()
+      this.maptypes = this.platform.createDefaultLayers()
 
       // Instantiate (and display) a map object:
-      var map = new H.Map(document.getElementById('mapContainer'), maptypes.normal.map,
-        {
-          zoom: 10,
-          center: { lng: 13.4, lat: 52.51 }
-        })
-      var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
-      var ui = H.ui.UI.createDefault(map, maptypes)
+      this.map = new mapsjs.Map(document.getElementById('mapContainer'), this.maptypes.normal.map);
 
-      this.addMarkersToMap(map, this.headquarters, ui)
+      //this.map = new H.Map(document.getElementById('mapContainer'), this.maptypes.normal.map)
+      var mapEvents = new H.mapevents.MapEvents(this.map)
+      var behavior = new H.mapevents.Behavior(mapEvents)
+      this.ui = H.ui.UI.createDefault(this.map, this.maptypes)
+      this.addMarkersToMap()
   },
   methods: {
-    addMarkersToMap(map, locations, ui) {
-      var group = new H.map.Group()
-      locations.forEach(item => {
-        item.items.forEach(headquarter => {
-          var marker = new H.map.Marker({lat: headquarter.lat, lng: headquarter.lng})
-          marker.label = headquarter.address
-          group.addObject(marker)
-        })
+    addMarkersToMap() {
+      var uiTemp = this.ui
+      if (!this.markersGroup){
+        this.markersGroup = new H.map.Group()
+        this.markersGroup.addEventListener('pointerenter', function (evt) {
+          if(!this.bubble){
+            this.bubble = new H.ui.InfoBubble(evt.target.getPosition(), {content: evt.target.label})
+            this.bubble.addClass('info-bubble')
+            uiTemp.addBubble(this.bubble)
+          }
+            var address = evt.target.label
+            this.bubble.setPosition(evt.target.getPosition())
+            this.bubble.setContent(`
+                  <div class="info-bubble-title">Address</div>
+                  <div class="info-bubble-label">
+                      ${address} <br />
+                  </div>`)
+            this.bubble.open()
+
+        }, true)
+
+        this.markersGroup.addEventListener('pointerleave', function (evt) {
+          if(this.bubble){
+            this.bubble.close()
+          }
+        }, true)
+        this.map.addObject(this.markersGroup)
+      }
+      this.markersGroup.removeAll()
+
+      this.headquarters.forEach(item => {
+        if (item.visible) {
+          item.items.forEach(headquarter => {
+            var myIcon = new H.map.Icon(this.svgMarker)
+            var marker = new H.map.Marker({lat: headquarter.lat, lng: headquarter.lng})
+            marker.label = headquarter.address
+            // marker.setIcon(myIcon)
+            this.markersGroup.addObject(marker)
+          })
+        }
       })
 
-      group.addEventListener('tap', function (evt) {
-        map.setCenter(evt.target.getPosition())
-        if(!this.bubble){
-          this.bubble = new H.ui.InfoBubble(evt.target.getPosition(), {content: evt.target.label})
-          ui.addBubble(this.bubble)
+      if (this.markersGroup.getBounds()) {
+        this.map.setViewBounds(this.markersGroup.getBounds())
+      }
+    },
+    zoomToLocation(location) {
+      var mapTemp = this.map
+      H.map.render.panorama.RenderEngine.getClosestPanoramas({lat:location.lat , lng:location.lng}, function(panoramaData) {
+        if (panoramaData.length) {
+          mapTemp.setEngineType(H.Map.EngineType.PANORAMA)
+          mapTemp.setCenter(panoramaData[0].position)
         } else {
-          this.bubble.setPosition(evt.target.getPosition())
-          this.bubble.setContent(evt.target.label)
-          this.bubble.open()
+          mapTemp.setEngineType(H.Map.EngineType.P2D)
+          mapTemp.setCenter({lng:location.lng , lat:location.lat})
+          mapTemp.setZoom(15, true)
         }
-      }, false)
-
-      map.addObject(group)
-      map.setViewBounds(group.getBounds())
+      })
     }
   }
 }
