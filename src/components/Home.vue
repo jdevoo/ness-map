@@ -99,7 +99,7 @@ export default {
       this.maptypes = this.platform.createDefaultLayers()
 
       // Instantiate (and display) a map object:
-      this.map = new mapsjs.Map(document.getElementById('mapContainer'), this.maptypes.normal.map);
+      this.map = new mapsjs.Map(document.getElementById('mapContainer'), this.maptypes.satellite.map);
 
       //this.map = new H.Map(document.getElementById('mapContainer'), this.maptypes.normal.map)
       var mapEvents = new H.mapevents.MapEvents(this.map)
