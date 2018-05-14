@@ -6,6 +6,9 @@ import router from './router'
 import Vuetify from 'vuetify'
 import { store } from './store'
 import 'vuetify/dist/vuetify.min.css'
+import Loading from 'vue-loading-overlay'
+
+import 'vue-loading-overlay/dist/vue-loading.min.css'
 
 Vue.use(Vuetify, { theme: {
   primary: '#1565C0',
@@ -16,6 +19,8 @@ Vue.use(Vuetify, { theme: {
   success: '#4CAF50',
   warning: '#FFC107'
 }})
+
+Vue.use(Loading)
 
 Vue.config.productionTip = false
 

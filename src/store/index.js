@@ -2250,6 +2250,15 @@ export const store = new Vuex.Store({
     },
     coords (state) {
       return state.coords
+    },
+    headquartersCount (state) {
+      var count = 0
+      state.headquarters.forEach(item => {
+        item.items.forEach(headquarter => {
+          count++
+        })
+      })
+      return count
     }
   }
 })

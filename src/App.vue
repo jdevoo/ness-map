@@ -17,7 +17,7 @@
             <v-list-tile-title>Home</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <!-- <v-list-tile to="/routing">
+        <v-list-tile to="/routing">
           <v-list-tile-action>
             <v-icon>navigation</v-icon>
           </v-list-tile-action>
@@ -32,7 +32,15 @@
           <v-list-tile-content>
             <v-list-tile-title>Ness KE Employees</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile> -->
+        </v-list-tile>
+        <v-list-tile to="/places">
+          <v-list-tile-action>
+            <v-icon>place</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Places</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar dark app color="blue darken-3"
