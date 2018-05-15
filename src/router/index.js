@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import Routing from '@/components/Routing'
 import HeatMap from '@/components/HeatMap'
 import Places from '@/components/Places'
+import AdvancedRouting from '@/components/AdvancedRouting'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/routing',
       name: 'Routing',
       component: Routing
+    },
+    {
+      path: '/advanced-routing',
+      name: 'AdvancedRouting',
+      component: AdvancedRouting
     },
     {
       path: '/heatmap',

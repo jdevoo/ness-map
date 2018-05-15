@@ -25,6 +25,14 @@
             <v-list-tile-title>Routing</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile to="/advanced-routing">
+          <v-list-tile-action>
+            <v-icon>navigation</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Advanced Routing</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile to="/heatmap">
           <v-list-tile-action>
             <v-icon>map</v-icon>
