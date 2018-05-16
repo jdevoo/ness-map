@@ -5,6 +5,7 @@ import Routing from '@/components/Routing'
 import HeatMap from '@/components/HeatMap'
 import Places from '@/components/Places'
 import AdvancedRouting from '@/components/AdvancedRouting'
+import Weather from '@/components/Weather'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/places',
       name: 'Places',
       component: Places
+    },
+    {
+      path: '/weather',
+      name: 'Weather',
+      component: Weather
     }
   ]
 })

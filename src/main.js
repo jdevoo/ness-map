@@ -22,6 +22,9 @@ Vue.use(Vuetify, { theme: {
 
 Vue.use(Loading)
 
+Vue.prototype.$app_id = 'tOPDP4GqwPojCCApkMyA'
+Vue.prototype.$app_code = 'B31er-cbmC_bBOoupZ_O2g'
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

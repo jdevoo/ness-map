@@ -44,8 +44,8 @@ export default {
   mounted: function () {
       // Initialize the platform object:
       this.platform = new H.service.Platform({
-        'app_id': 'tOPDP4GqwPojCCApkMyA',
-        'app_code': 'B31er-cbmC_bBOoupZ_O2g',
+        'app_id': this.$app_id,
+        'app_code': this.$app_code,
         'useCIT': true,
         'useHTTPS': true
       })
